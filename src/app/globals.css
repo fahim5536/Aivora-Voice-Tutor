@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@source "./**/*.{ts,tsx}";
+
+:root {
+  --background: #080b13;
+  --foreground: #f8fafc;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+select option {
+  color: #e2e8f0;
+}
+
+@keyframes pulse-ring {
+  0% { opacity: 0.7; transform: scale(0.9); }
+  70%, 100% { opacity: 0; transform: scale(1.25); }
+}
+
+@keyframes message-slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message-enter {
+  animation: message-slide-in 320ms ease-out both;
+}

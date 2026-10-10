@@ -16,6 +16,25 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Environment variables
+
+Create `.env.local` with the provider keys you want to use:
+
+```env
+GROQ_API_KEY=your_groq_key
+ELEVENLABS_API_KEY=your_elevenlabs_key
+```
+
+ElevenLabs speech uses Rachel by default (`21m00Tcm4TlvDq8ikWAM`). To use
+another ElevenLabs voice, such as Adam, set its voice ID:
+
+```env
+ELEVENLABS_VOICE_ID=your_elevenlabs_voice_id
+```
+
+If `ELEVENLABS_API_KEY` is not configured or the speech request fails, the
+browser speech synthesis fallback is used.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
