@@ -339,7 +339,7 @@ export default function Home() {
     const userMessage = message.trim();
     if (!userMessage || activity === "processing") return;
     if (sessionStartedAt === null) setSessionStartedAt((current) => current ?? Date.now());
-    setTranscript(userMessage);
+    setTranscript("");
     setConversation((current) => [...current, { id: ++messageIdRef.current, role: "user", text: userMessage }]);
     setActivity("processing");
     setError("");
@@ -607,36 +607,36 @@ export default function Home() {
   const statusLabel = { idle: "Ready to learn", listening: "Listening...", processing: "Processing with Groq...", speaking: "Speaking..." }[activity];
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#080b13] text-slate-100">
+    <main className="relative min-h-screen overflow-x-hidden bg-[#080b13] text-slate-100">
       <div className="pointer-events-none absolute -left-40 top-0 h-[32rem] w-[32rem] rounded-full bg-violet-600/15 blur-[120px]" />
       <div className="pointer-events-none absolute -right-32 top-1/3 h-[28rem] w-[28rem] rounded-full bg-cyan-500/10 blur-[120px]" />
-      <div className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 sm:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.07] py-6">
-          <div className="flex items-center gap-3" aria-label="Aivora Voice Tutor">
+      <div className="relative mx-auto flex min-h-screen w-full max-w-6xl flex-col px-3 sm:px-6 lg:px-8">
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.07] py-4 sm:gap-4 sm:py-6">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3" aria-label="Aivora Voice Tutor">
             <Image
               src="/logo.png"
               alt="Aivora Voice Tutor logo"
               width={60}
               height={60}
               priority
-              className="h-12 w-12 rounded-full object-cover opacity-100 mix-blend-screen drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] drop-shadow-[0_0_16px_rgba(34,211,238,0.38)] sm:h-14 sm:w-14"
+              className="h-10 w-10 rounded-full object-cover opacity-100 mix-blend-screen drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)] drop-shadow-[0_0_16px_rgba(34,211,238,0.38)] sm:h-14 sm:w-14"
             />
             <div>
-              <p className="text-base font-bold tracking-tight text-white sm:text-lg">Aivora Voice Tutor</p>
-              <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-cyan-300/70">AI-powered learning companion</p>
+              <p className="truncate text-sm font-bold tracking-tight text-white sm:text-lg">Aivora Voice Tutor</p>
+              <p className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-cyan-300/70 sm:block">AI-powered learning companion</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center justify-end gap-2">
-            <label className="relative flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300">
+          <div className="flex max-w-full flex-wrap items-center justify-end gap-1.5 sm:gap-2">
+            <label className="relative flex min-w-0 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-2 text-sm text-slate-300 sm:px-3">
               <Globe2 size={15} className="text-cyan-300" />
-              <select value={language} onChange={(event) => setLanguage(event.target.value as LanguageCode)} className="cursor-pointer appearance-none bg-transparent pr-5 outline-none" aria-label="Choose tutor language">
+              <select value={language} onChange={(event) => setLanguage(event.target.value as LanguageCode)} className="max-w-20 cursor-pointer appearance-none bg-transparent pr-4 outline-none sm:max-w-none sm:pr-5" aria-label="Choose tutor language">
                 {languages.map((item) => <option key={item.code} value={item.code} className="bg-[#111827]">{item.label}</option>)}
               </select><ChevronDown size={14} className="pointer-events-none absolute right-2" />
             </label>
             <button type="button" onClick={openSettings} aria-label="Open settings" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-sm text-slate-300 transition hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-cyan-100"><Settings size={15} /> <span className="hidden sm:inline">Settings</span></button>
             <button type="button" onClick={toggleVoice} aria-pressed={isVoiceEnabled} aria-label={isVoiceEnabled ? "Mute tutor voice" : "Unmute tutor voice"} className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm transition ${isVoiceEnabled ? "border-emerald-300/20 bg-emerald-300/[0.06] text-emerald-100 hover:border-emerald-200/40 hover:bg-emerald-300/15" : "border-rose-300/25 bg-rose-300/[0.06] text-rose-200 hover:border-rose-200/40 hover:bg-rose-300/15"}`}><span className="relative">{isVoiceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}<span className={`absolute -right-1 -top-1 h-1.5 w-1.5 rounded-full ${isVoiceEnabled ? "bg-emerald-300" : "bg-rose-300"}`} /></span><span className="hidden sm:inline">Voice: {isVoiceEnabled ? "ON" : "MUTE"}</span></button>
             <button type="button" onClick={() => setSavedInsightsOpen(true)} aria-label={`Open saved insights${savedInsights.length ? `, ${savedInsights.length} saved` : ""}`} className="relative inline-flex items-center gap-2 rounded-full border border-amber-300/20 bg-amber-300/[0.06] px-3 py-2 text-sm text-amber-100 transition hover:border-amber-200/40 hover:bg-amber-300/15"><Bookmark size={15} /> <span className="hidden sm:inline">Saved Insights</span>{savedInsights.length > 0 && <span className="grid min-w-5 place-items-center rounded-full bg-amber-300 px-1.5 py-0.5 text-[10px] font-bold text-slate-950">{savedInsights.length}</span>}</button>
-            {conversation.length > 0 && <div className="flex flex-wrap items-center justify-end gap-2">
+            {conversation.length > 0 && <div className="flex w-full flex-wrap items-center justify-end gap-1.5 sm:gap-2">
               <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/15 bg-cyan-300/[0.06] px-3 py-2 text-xs font-medium text-cyan-100" aria-label="Session duration"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300" /> {formatDuration(sessionSeconds)}</div>
               <button type="button" onClick={copyNotes} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-cyan-300/30 hover:bg-cyan-300/10 hover:text-cyan-100"><FileText size={14} /> Copy notes</button>
               <button type="button" onClick={exportNotes} aria-label="Download study notes" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-slate-300 transition hover:border-violet-300/30 hover:bg-violet-300/10 hover:text-violet-100"><Download size={14} /> Download Notes</button>
@@ -646,11 +646,11 @@ export default function Home() {
           </div>
         </header>
 
-        <section className={`flex flex-1 flex-col ${conversation.length === 0 ? "items-center justify-center py-12 text-center sm:py-16" : "min-h-0 py-4 sm:py-6"}`}>
+        <section className={`flex flex-1 flex-col ${conversation.length === 0 ? "items-center justify-center py-8 text-center sm:py-16" : "min-h-0 py-3 sm:py-6"}`}>
         {conversation.length === 0 ? <div className="flex w-full flex-col items-center text-center">
           <div className={`mb-6 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium ${activity === "listening" ? "border-cyan-300/25 bg-cyan-300/10 text-cyan-200" : activity === "processing" ? "border-amber-300/25 bg-amber-300/10 text-amber-200" : activity === "speaking" ? "border-violet-300/25 bg-violet-300/10 text-violet-200" : "border-emerald-300/20 bg-emerald-300/10 text-emerald-200"}`}><span className={`h-1.5 w-1.5 rounded-full ${activity === "idle" ? "bg-emerald-300" : "animate-pulse bg-current"}`} />{statusLabel}</div>
           <p className="mb-7 text-xs font-medium uppercase tracking-[0.2em] text-violet-200">Your always-on learning companion</p>
-          <h1 className="max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-white sm:text-6xl">Speak your questions.<br /><span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">Grow your ideas.</span></h1>
+          <h1 className="max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-white sm:text-6xl">Speak your questions.<br /><span className="bg-gradient-to-r from-violet-300 via-fuchsia-300 to-cyan-300 bg-clip-text text-transparent">Grow your ideas.</span></h1>
           <p className="mt-5 max-w-lg text-base leading-7 text-slate-400">Learn languages, untangle code, and explore anything that sparks your curiosity — naturally, by voice.</p>
 
           <div className="relative mt-12">
@@ -671,14 +671,14 @@ export default function Home() {
             <label className="rounded-xl border border-white/[0.07] bg-black/10 px-3 py-2.5"><span className="flex items-center justify-between text-[10px] font-semibold uppercase tracking-wider text-slate-500"><span>Speech rate</span><span className="text-cyan-300">{speed.toFixed(2)}x</span></span><input type="range" min="0.6" max="1.25" step="0.01" value={speed} onChange={(event) => setSpeed(Number(event.target.value))} className="mt-3 w-full accent-cyan-300" aria-label="Text to speech playback rate" /><span className="mt-1 flex justify-between text-[10px] text-slate-600"><span>Gentle</span><span>Fast</span></span></label>
             <div className="hidden px-2 text-right text-[10px] text-slate-600 lg:block"><span className="block">{selectedVoice.hint}</span><span className="mt-1 block text-fuchsia-300/50">{selectedPersona.description}</span><span className="mt-1 block text-cyan-300/50">{selectedVoiceProfile.description}</span></div>
           </div>
-          <div className="mt-4 flex w-full max-w-3xl items-end gap-2 rounded-2xl border border-white/10 bg-white/[0.035] p-3 text-left backdrop-blur-xl">
-            <textarea value={transcript} onChange={(event) => setTranscript(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void askTutor(transcript); } }} placeholder="Type a question or tap the microphone to speak..." rows={2} className="min-h-12 flex-1 resize-none bg-transparent px-2 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600" aria-label="Tutor question" />
+          <div className="mt-4 flex w-full max-w-3xl items-end gap-1.5 rounded-2xl border border-white/10 bg-white/[0.035] p-2 sm:gap-2 sm:p-3 text-left backdrop-blur-xl">
+            <textarea value={transcript} onChange={(event) => setTranscript(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void askTutor(transcript); } }} placeholder="Type a question or tap the microphone to speak..." rows={2} className="min-h-12 min-w-0 flex-1 resize-none bg-transparent px-2 py-2 text-sm text-slate-100 outline-none placeholder:text-slate-600" aria-label="Tutor question" />
             <button type="button" onClick={toggleListening} disabled={activity === "processing" || activity === "speaking"} aria-label={activity === "listening" ? "Stop microphone input" : "Start microphone input"} className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl border transition ${activity === "listening" ? "border-cyan-300/40 bg-cyan-300/20 text-cyan-100" : "border-white/10 bg-white/[0.06] text-slate-300 hover:border-cyan-300/30 hover:text-cyan-100"} disabled:cursor-not-allowed disabled:opacity-40`}><Mic size={19} /></button>
-            <button type="button" onClick={() => void askTutor(transcript)} disabled={!transcript.trim() || activity === "processing" || activity === "speaking"} className="h-11 rounded-xl bg-violet-500 px-4 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-40">Send</button>
+            <button type="button" onClick={() => void askTutor(transcript)} disabled={!transcript.trim() || activity === "processing" || activity === "speaking"} className="h-11 shrink-0 rounded-xl bg-violet-500 px-3 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-40 sm:px-4">Send</button>
           </div>
           {summaryError && <p role="alert" className="mt-3 w-full max-w-3xl text-left text-sm text-rose-300">{summaryError}</p>}
 
-          <div className="mt-8 w-full max-w-3xl text-left"><p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Try asking</p><div className="flex flex-wrap gap-2">
+          <div className="mt-8 w-full max-w-3xl text-left"><p className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Try asking</p><div className="flex flex-wrap gap-1.5 sm:gap-2">
             {quickPrompts.map((prompt) => <button key={prompt} type="button" disabled={activity === "processing" || activity === "speaking"} onClick={() => void askTutor(prompt)} className="rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs text-slate-300 transition hover:border-violet-300/40 hover:bg-violet-300/10 hover:text-violet-100 disabled:cursor-not-allowed disabled:opacity-50">{prompt}</button>)}
             <button type="button" disabled={activity === "processing" || activity === "speaking"} onClick={startQuiz} className="inline-flex items-center gap-2 rounded-full border border-fuchsia-300/25 bg-fuchsia-300/10 px-3.5 py-2 text-xs font-medium text-fuchsia-100 transition hover:border-fuchsia-200/50 hover:bg-fuchsia-300/20 disabled:cursor-not-allowed disabled:opacity-40"><BrainCircuit size={14} /> Quiz me</button>
           </div></div>
@@ -695,7 +695,7 @@ export default function Home() {
             </div>
             {error && <div role="alert" className="mt-4 rounded-xl border border-rose-400/20 bg-rose-400/[0.08] p-3 text-sm text-rose-200">{error}</div>}
           </div>}
-        </div> : <div className="flex min-h-0 flex-1 gap-4 text-left">
+        </div> : <div className="flex min-h-0 flex-1 gap-2 text-left sm:gap-4">
           <aside className="hidden w-60 shrink-0 flex-col rounded-2xl border border-white/10 bg-white/[0.035] p-3 backdrop-blur-xl lg:flex">
             <button type="button" onClick={clearChat} className="flex items-center justify-center gap-2 rounded-xl border border-violet-300/25 bg-violet-300/10 px-3 py-2.5 text-sm font-medium text-violet-100 transition hover:bg-violet-300/20"><Mic size={16} /> New Chat</button>
             <div className="mt-6">
@@ -715,7 +715,7 @@ export default function Home() {
               <div><p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Active conversation</p><p className="mt-1 text-sm text-slate-300">{selectedPersona.label} · {selectedLanguage.label}</p></div>
               <button type="button" onClick={clearChat} className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-slate-400 transition hover:border-violet-300/30 hover:bg-violet-300/10 hover:text-violet-100 lg:hidden"><Mic size={14} /> New Chat</button>
             </div>
-            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto pb-28 pr-1">
+            <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pb-28 pr-0 sm:space-y-4 sm:pr-1">
               {conversation.map((message) => <div key={message.id} className={`message-enter flex ${message.role === "user" ? "justify-end" : "justify-start"}`}><div className={`max-w-[94%] rounded-2xl px-4 py-3 sm:max-w-[78%] ${message.role === "user" ? "rounded-br-md bg-violet-500/20 text-violet-50" : "rounded-bl-md border border-white/10 bg-[#121827]/90 text-slate-200"}`}>
                 <div className="mb-1 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">{message.role === "user" ? "You" : <><Bot size={12} /> Aivora</>}</div>
                 <div className="text-sm leading-6">{message.role === "assistant" ? renderMarkdown(message.text, (code) => void copyCode(code), copiedCode) : message.text}</div>
@@ -724,10 +724,10 @@ export default function Home() {
               {activity === "processing" && <div className="flex justify-start"><div className="rounded-2xl rounded-bl-md border border-amber-300/15 bg-amber-300/[0.06] px-4 py-3 text-sm text-amber-100"><span className="inline-flex items-center gap-2"><span className="h-2 w-2 animate-bounce rounded-full bg-amber-300" /><span className="h-2 w-2 animate-bounce rounded-full bg-amber-300 [animation-delay:120ms]" /><span className="h-2 w-2 animate-bounce rounded-full bg-amber-300 [animation-delay:240ms]" /> Aivora is thinking</span></div></div>}
             </div>
             <div className="sticky bottom-0 mt-3 border-t border-white/[0.07] bg-[#080b13]/95 pt-3 backdrop-blur-xl">
-              <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-white/[0.05] p-2">
-                <textarea value={transcript} onChange={(event) => setTranscript(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void askTutor(transcript); } }} placeholder="Message Aivora..." rows={1} className="min-h-11 flex-1 resize-none bg-transparent px-3 py-2.5 text-sm text-slate-100 outline-none placeholder:text-slate-600" aria-label="Message Aivora" />
+              <div className="flex items-end gap-1.5 rounded-2xl border border-white/10 bg-white/[0.05] p-1.5 sm:gap-2 sm:p-2">
+                <textarea value={transcript} onChange={(event) => setTranscript(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void askTutor(transcript); } }} placeholder="Message Aivora..." rows={1} className="min-h-11 min-w-0 flex-1 resize-none bg-transparent px-2 py-2.5 text-sm text-slate-100 outline-none placeholder:text-slate-600 sm:px-3" aria-label="Message Aivora" />
                 <button type="button" onClick={toggleListening} disabled={activity === "processing" || activity === "speaking"} aria-label="Use microphone" className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl border ${activity === "listening" ? "border-cyan-300/40 bg-cyan-300/20 text-cyan-100" : "border-white/10 bg-white/[0.06] text-slate-300"} disabled:opacity-40`}><Mic size={18} /></button>
-                <button type="button" onClick={() => void askTutor(transcript)} disabled={!transcript.trim() || activity === "processing" || activity === "speaking"} className="h-11 rounded-xl bg-violet-500 px-4 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:opacity-40">Send</button>
+                <button type="button" onClick={() => void askTutor(transcript)} disabled={!transcript.trim() || activity === "processing" || activity === "speaking"} className="h-11 shrink-0 rounded-xl bg-violet-500 px-3 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:opacity-40 sm:px-4">Send</button>
               </div>
               <p className="mt-2 text-center text-[10px] text-slate-600">Aivora can make mistakes. Check important information.</p>
             </div>
